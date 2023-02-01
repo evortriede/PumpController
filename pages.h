@@ -128,9 +128,12 @@ static const char rootPage[] PROGMEM =R"(
         <input type="button" id="sendPump" value="Change" onclick="sendPumpSetting();"></input><br>
         <input type="button" id="auto" value="Automatic" onclick="toggleAutomatic();"></input><br>
       </form><br>
-      <br><input type="button" value="StartTest" id="testMode" onclick="toggleTestMode();"></input>
-      <br><input type="number" id="cltest" value=0></input> <button onclick="sendClTest();">Send</button>
-      <br><br><a href='/config'>Config</a>
+      <br><a href='/config'>Config</a>
+      <div hidden="hidden">
+        <br><input type="button" value="StartTest" id="testMode" onclick="toggleTestMode();"></input>
+        <br><input type="number" id="cltest" value=0></input> 
+        <button onclick="sendClTest();">Send</button>
+      </div>
     </div>
   </body>
 </html>
@@ -141,22 +144,22 @@ static const char configFmt[] PROGMEM =R"(
   <head>
   </head>
   <body>
-    <div style='font-size:200%%'>
+    <div style='font-size:150%%'>
       <form action="/setConfig" method="GET">
-        IP for Current Monitor <input type="text" name="cmip" style="font-size:40px" value="%s"></input><br>
-        Max Pump Value <input type="number" name="pumpmax" style="font-size:40px" value="%i"></input><br>
-        Max Chlorine Value <input type="number" name="chlmax" style="font-size:40px" value="%i"></input><br>
-        Conversion factor <input type="number" step="0.1" name="factor" style="font-size:40px" value="%0.2f"></input><br>
-        Update Frequency (sec) <input type="number" name="frequency" style="font-size:40px" value="%i"></input><br>
-        Sweet Spot LOW <input type="number" step="0.01" name="sweetlo" style="font-size:40px" value="%0.2f"></input><br>
-        Sweet Spot HIGH <input type="number" step="0.01" name="sweethi" style="font-size:40px" value="%0.2f"></input><br>
-        Initial Pump Setting <input type="number" step="1" name="autostart" style="font-size:40px" value="%i"></input><br>
-        Tolerance (ppm) <input type="number" step="0.01" name="tolerance" style="font-size:40px" value="%0.2f"></input><br>
-        Adjust Frequency (seconds) <input type="number" step="1" name="adjustfreq" style="font-size:40px" value="%i"></input><br>
-        SSID to join <input type="text" name="ssid" style="font-size:40px" value="%s"></input><br>
-        Password for SSID to join <input type="text" name="pass" style="font-size:40px" value="%s"></input><br>
-        SSID for Captive Net <input type="text" name="captive_ssid" style="font-size:40px" value="%s"></input><br>
-        Password for Captive Net SSID <input type="text" name="captive_pass" style="font-size:40px" value="%s"></input><br>
+        IP for Current Monitor <input type="text" name="cmip" style="font-size:30px" value="%s"></input><br>
+        Max Pump Value <input type="number" name="pumpmax" style="font-size:30px" value="%i"></input><br>
+        Max Chlorine Value <input type="number" name="chlmax" style="font-size:30px" value="%i"></input><br>
+        Conversion factor <input type="number" step="0.1" name="factor" style="font-size:30px" value="%0.2f"></input><br>
+        Update Frequency (sec) <input type="number" name="frequency" style="font-size:30px" value="%i"></input><br>
+        Sweet Spot LOW (ppm) <input type="number" step="0.01" name="sweetlo" style="font-size:30px" value="%0.2f"></input><br>
+        Sweet Spot HIGH (ppm) <input type="number" step="0.01" name="sweethi" style="font-size:30px" value="%0.2f"></input><br>
+        Tolerance (ppm) <input type="number" step="0.01" name="tolerance" style="font-size:30px" value="%0.2f"></input><br>
+        Initial Pump Setting <input type="number" step="1" name="autostart" style="font-size:30px" value="%i"></input><br>
+        Adjust Frequency (minutes) <input type="number" step="1" name="adjustfreq" style="font-size:30px" value="%i"></input><br>
+        SSID to join <input type="text" name="ssid" style="font-size:30px" value="%s"></input><br>
+        Password for SSID to join <input type="text" name="pass" style="font-size:30px" value="%s"></input><br>
+        SSID for Captive Net <input type="text" name="captive_ssid" style="font-size:30px" value="%s"></input><br>
+        Password for Captive Net SSID <input type="text" name="captive_pass" style="font-size:30px" value="%s"></input><br>
         <input type="submit" style="font-size:40px"></input>
       </form>
       <a href="/">Home</a><br>

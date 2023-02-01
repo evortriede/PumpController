@@ -67,8 +67,8 @@ void handleConfig(AsyncWebServerRequest *request)
          ,configData.frequency
          ,configData.sweetSpotLow
          ,configData.sweetSpotHigh
-         ,configData.autoStartSetting
          ,configData.tolerance
+         ,configData.autoStartSetting
          ,configData.adjustFrequency
          ,configData.ssid
          ,configData.pass
