@@ -8,9 +8,6 @@ void* stkCheck()
   return (void*)&x;
 }
 
-
-
-
 void reboot()
 {
   if (telnetClient)
@@ -80,6 +77,11 @@ void handleConfig(AsyncWebServerRequest *request)
 
 void setPump(int setting)
 {
+#ifdef USE_MCP
+  if (setting<0 || setting>4095) return;
+  Serial.printf("setting pump to %i\n",setting);
+  MCP.setValue(setting);
+#else
   if (setting<0||setting>255) return;
   Serial.printf("setting pump to %i\n",setting);
   if (setting) // if non-zero we just write it
@@ -97,6 +99,7 @@ void setPump(int setting)
     pinMode(PUMP_PIN,OUTPUT);
     digitalWrite(PUMP_PIN,LOW);
   }
+#endif
   pumpSetting=setting;
   if (telnetClient)
   {
@@ -434,12 +437,17 @@ void setup()
 {
   Serial.begin(115200);
   esp_log_set_vprintf(&myprintf);
+#ifdef USE_MCP
+  MCP.begin(21,22);
+  setPump(0);
+#else
   pinMode(PUMP_PIN,INPUT);
   delay(100);
   pinMode(PUMP_PIN,OUTPUT);
   digitalWrite(PUMP_PIN,LOW);
 //  dacWrite(PUMP_PIN,0);
-  adcAttachPin(34);
+#endif
+  adcAttachPin(CL17_PIN);
   eepromSetup();
   wifiAPSetup();
   initWebSocket();
@@ -587,7 +595,9 @@ void loop()
     adjustPump();
     autoTime=millis()+(60000*configData.adjustFrequency);
   }
-  
+
+
+#ifndef USE_MCP
   if (pumpSetting)
   {
     dacWrite(PUMP_PIN,pumpSetting);
@@ -596,4 +606,5 @@ void loop()
   {
     digitalWrite(PUMP_PIN,LOW);
   }
+#endif
 }

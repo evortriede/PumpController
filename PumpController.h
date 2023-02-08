@@ -8,7 +8,17 @@
 #include <esp_log.h>
 #include <nvs.h>
 
+#define USE_MCP
+
+#ifdef USE_MCP
+#include "Wire.h"
+#include "MCP4725.h"
+
+MCP4725 MCP(0x62);  // 0x62 or 0x63
+#else
 #define PUMP_PIN 25
+#endif
+
 #define CL17_PIN 34
 
 bool useNVS=true;
