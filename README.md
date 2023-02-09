@@ -11,8 +11,10 @@ The firmware joins the WTP WiFi network and acts as a web server for configurati
 ## Main Page
 
 ![Pump Controller Main Page](/assets/PumpControllerMainPage.png)
+Pump Controller Main Page while WTP is running and controller is in automatic mode
 
 ![Pump Controller Manual Mode](/assets/PumpControllerManualMode.png)
+Pump Controller Main Page in manual mode
 
 By default and assuming that the Pump Controller is powered on and has joined the local WiFi network, the main page can be displayed by navigating to http://PumpController.local on the WTP computer's browser. 
 
