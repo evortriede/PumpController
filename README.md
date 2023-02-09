@@ -10,15 +10,18 @@ The firmware joins the WTP WiFi network and acts as a web server for configurati
 
 ## Main Page
 
+
 ![Pump Controller Main Page](/assets/PumpControllerMainPage.png)
 Pump Controller Main Page while WTP is running and controller is in automatic mode
+
 
 ![Pump Controller Manual Mode](/assets/PumpControllerManualMode.png)
 Pump Controller Main Page in manual mode
 
-By default and assuming that the Pump Controller is powered on and has joined the local WiFi network, the main page can be displayed by navigating to http://PumpController.local on the WTP computer's browser. 
 
-The meter across the top of the display gives a visual representation of the chlorine consentration as measured by the CL17. If the chlorine consentration is within the "sweet spot" (see Configuration below) the color will be green. If it is above the sweet spot it will be red and if below it will be yellow.
+By default, and assuming that the Pump Controller is powered on and has joined the local WiFi network, the main page can be displayed by navigating to http://PumpController.local on the WTP computer's browser. 
+
+The meter across the top of the display gives a visual representation of the chlorine concentration as measured by the CL17. If the chlorine concentration is within the "sweet spot" (see Configuration below) the color will be green. If it is above the sweet spot, it will be red and if below it will be yellow.
 
 The calculated chlorine concentration in parts per million (ppm) is displayed inside the meter. This value is calculated by dividing the raw CL17 reading (displayed below the meter) by the configured conversion factor (see Configuration below). The conversion factor should be adjusted to make the calculated number and the CL17 display agree with each other.
 
@@ -26,7 +29,7 @@ The Raw CL17 Reading is the value measured by the ESP32 from the 4-20mA to Volta
 
 The Pump Setting shows the current setting of the pump. The value is unitless and represents the raw value given to either the ESP32 DAC or the MCP4725 DAC, depending on how the firmware was compiled (see Building Firmware below). The maximum value is 255 when using the ESP32 DAC or 4095 when using the MCP4725. The output from either DAC is given to the Kamoer DIPump550 pump which expects 0-5 volts to affect between 0 and 400 RPM. The ESP32 DAC can output a maximum of ~3 volts whereas the MCP4725 can output up to ~4.5 volts. Since the highest speed that we ever expect to need to run the pump is ~50 RPM, either method is capable; however, the MCP4725 has a larger range and is more precise. One may enter a number and click the Change button to affect a new value. 
 
-The Automatic button may be clicked to start the automatic adjustment of the pump. When clicked the text in the button will change to "Manual" and clicking again will stop automatic adjustment and change the text back to "Automatic". When in automatic mode, pump adjustments are made by comparing the calculated ppm to the sweet spot. If the ppm value is within the configured tolerance of the midpoint between the configured low and high sweet spot values, no change will take place. If the ppm value is below that range, the pump speed will be increased. If it is above the range it will be decreased. In automatic mode, manual pump changes can still be made and the adjustments will be made to the manually entered value. The interval between adjustments is controlled by the Adjust Frequency configuration field (see below). Pump changes take some time to reach the CL17 and the CL17 takes 1.75 minutes between readings, so the minimum effective interval is probably about five minutes in order to give the CL17 time to stabelize at the new chlorine concentration.
+The Automatic button may be clicked to start the automatic adjustment of the pump. When clicked the text in the button will change to "Manual" and clicking again will stop automatic adjustment and change the text back to "Automatic". When in automatic mode, pump adjustments are made by comparing the calculated ppm to the sweet spot. If the ppm value is within the configured tolerance of the midpoint between the configured low and high sweet spot values, no change will take place. If the ppm value is below that range, the pump speed will be increased. If it is above the range, it will be decreased. In automatic mode, manual pump changes can still be made and the adjustments will be made to the manually entered value. The interval between adjustments is controlled by the Adjust Frequency configuration field (see below). Pump changes take some time to reach the CL17 and the CL17 takes 1.75 minutes between readings, so the minimum effective interval is probably about five minutes in order to give the CL17 time to stabilize at the new chlorine concentration.
 
 The Config link brings up the configuration page. 
 
@@ -42,18 +45,18 @@ The configuration fields are as follows:
 
 - IP for Current Monitor: This is the IP address for the Current Monitor
 - Max Pump Value: The maximum value that the pump output will be set to. When using the ESP32 built in DAC it should be set no higher than 255 and when using the MCP4725 it should be set no higher than 4095. 
-- Max Chlorine Value: This value should be set to the "Raw CL17 Reading" value when the CL17 is set to maximum recorder output in maintanence mode. This calibrates how the meter will be shown on the main webpage.
+- Max Chlorine Value: This value should be set to the "Raw CL17 Reading" value when the CL17 is set to maximum recorder output in maintenance mode. This calibrates how the meter will be shown on the main webpage.
 - Conversion factor: This is the factor by which the raw CL17 reading is divided to get parts per million (ppm). It is determined by observing the PPM display on the CL17 and the raw reading on the main page.
 - Update Frequency (sec): How often in seconds the display is updated.
-- Sweet Spot LOW (ppm): The mid point between Sweet Spot Low and Sweet Spot High is the target that the Pump Controller will aim for when performing automatic adjustments.
+- Sweet Spot LOW (ppm): The midpoint between Sweet Spot Low and Sweet Spot High is the target that the Pump Controller will aim for when performing automatic adjustments.
 - Sweet Spot HIGH (ppm): See Sweet Spot Low, above.
-- Tolerance (ppm): The number of ppm above or below the sweet spot the chlorine reading can be without the pump being adjusted. For example: if low is .3 and high is .6 the sweet spot is .45. If tollerance is .02 the pump will not adjust for readings between .43 and .47. Readings at or below .42 will adjust up and readings above .48 will adjust down. 
+- Tolerance (ppm): The number of ppm above or below the sweet spot the chlorine reading can be without the pump being adjusted. For example: if low is .3 and high is .6 the sweet spot is .45. If tolerance is .02 the pump will not adjust for readings between .43 and .47. Readings at or below .42 will adjust up and readings above .48 will adjust down. 
 - Initial Pump Setting: The initial pump setting when automatic adjustment is enabled.
 - Adjust Frequency (minutes): The number of minutes between pump adjustments. Note that the CL17 requires 1.75 minutes per reading.
 - SSID to join: The SSID for the local WiFi network. If left blank a preconfigured list of SSIDs will be used.
 - Password for SSID to join: Password for local WiFi SSID
 - SSID for Captive Net: SSID name for the captive portal (used for initial configuration e.g., to set the SSID if it is not in the pre-configured list.) If mDNS is available, <this name>.local can be used to access the web pages through the local WiFi network.
-- Password for Captive Net SSID: Self explanitory.
+- Password for Captive Net SSID: Self explanatory.
 
 ## Calibration
 
@@ -63,7 +66,7 @@ There are two configuration settings that need to be calibrated for the Pump Con
 
 To calibrate the Max Chlorine value, which is the value that the ESP32 will read from the CL17 when it is sending 20mA to the current to voltage converter. Set the CL17 to maximum recorder output as follows:
 
-1. Open the  cover of the CL17 so the keypad is accessable
+1. Open the  cover of the CL17 so the keypad is accessible
 2. Press the MENU key
 3. Press the UP ARROW key until SETUP is displayed
 4. Press the ENTER key
@@ -80,9 +83,9 @@ It is best to calibrate Conversion Factor during a WTP run when the CL17 reading
 
 ![Pump Controller Open](/assets/PumpControllerOpen.jpg)
 
-While it is unlikely that LWC will ever have to build another copy of the Pump Controller, maybe another small water system with a CL17 may want to replace their existing chlorine pump with a Kamoer DIPump550 (or similar) and controll the pump with this. So, here's what one would need to know.
+While it is unlikely that LWC will ever have to build another copy of the Pump Controller, maybe another small water system with a CL17 may want to replace their existing chlorine pump with a Kamoer DIPump550 (or similar) and control the pump with this. So, here's what one would need to know.
 
-The /hardware directory contains a bill of materials. The enclosure that LWC used was a repurposed plastic box that a couple of Arduino microcontrollers had been shipped in. Use whatever is on hand or use a disposable food storage container. The enclosure is not important. The circuit is built on a strip board. The LWC version is 19x33 to fit in our enclosure but any dimentions that accomodate the components will work. VeeCAD was used to compose the strip board art. Both a jpg of the layout and the VeeCAD file  are in the /hardware dierctory along with the TinyCAD schematic should any modifications be desired.
+The /hardware directory contains a bill of materials. The enclosure that LWC used was a repurposed plastic box that a couple of Arduino microcontrollers had been shipped in. Use whatever is on hand or use a disposable food storage container. The enclosure is not important. The circuit is built on a strip board. The LWC version is 19x33 to fit in our enclosure but any dimensions that accommodate the components will work. VeeCAD was used to compose the strip board art. Both a jpg of the layout and the VeeCAD file  are in the /hardware directory along with the TinyCAD schematic should any modifications be desired.
 
 ![VeeCad for Pump Controller](/hardware/PumpControllerBoardFront.jpg)
 
