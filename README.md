@@ -12,7 +12,7 @@ The firmware joins the WTP WiFi network and acts as a web server for configurati
 
 ![Pump Controller Main Page](/assets/PumpControllerMainPage.png)
 
-![Pump Controller Manual Mode](/assets/PumpControllerMainManualMode.png)
+![Pump Controller Manual Mode](/assets/PumpControllerManualMode.png)
 
 By default and assuming that the Pump Controller is powered on and has joined the local WiFi network, the main page can be displayed by navigating to http://PumpController.local on the WTP computer's browser. 
 
@@ -59,7 +59,7 @@ There are two configuration settings that need to be calibrated for the Pump Con
 
 ### Max Chlorine Calibration
 
-To calibrate the Max Chlorine value, which is the value that the ESP32 will read from the CL17 when it is sending 20mA to the current to voltage converter, Set the CL17 to maximum recorder output as follows:
+To calibrate the Max Chlorine value, which is the value that the ESP32 will read from the CL17 when it is sending 20mA to the current to voltage converter. Set the CL17 to maximum recorder output as follows:
 
 1. Open the  cover of the CL17 so the keypad is accessable
 2. Press the MENU key
@@ -80,7 +80,9 @@ It is best to calibrate Conversion Factor during a WTP run when the CL17 reading
 
 While it is unlikely that LWC will ever have to build another copy of the Pump Controller, maybe another small water system with a CL17 may want to replace their existing chlorine pump with a Kamoer DIPump550 (or similar) and controll the pump with this. So, here's what one would need to know.
 
-The /hardware directory contains a bill of materials. The enclosure that LWC used was a repurposed plastic box that a couple of Arduino microcontrollers had been shipped in. Use whatever is on hand or use a disposable food storage container. The enclosure is not important. The circuit is built on a strip board. The LWC version is 19x33 to fit in our enclosure but any dimentions that accomodate the components will work. VeeCAD was used to compose the strip board art. Both a PDF of the layout and the VeeCAD file  are in the /hardware dierctory along with the TinyCAD schematic should any modifications be desired.
+The /hardware directory contains a bill of materials. The enclosure that LWC used was a repurposed plastic box that a couple of Arduino microcontrollers had been shipped in. Use whatever is on hand or use a disposable food storage container. The enclosure is not important. The circuit is built on a strip board. The LWC version is 19x33 to fit in our enclosure but any dimentions that accomodate the components will work. VeeCAD was used to compose the strip board art. Both a jpg of the layout and the VeeCAD file  are in the /hardware dierctory along with the TinyCAD schematic should any modifications be desired.
+
+![VeeCad for Pump Controller](/hardware/PumpControllerBoardFront.jpg)
 
 If any of the foregoing is not perfectly obvious, seek assistance from an IoT geek.
 
