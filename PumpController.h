@@ -7,6 +7,7 @@
 #include <Update.h>
 #include <esp_log.h>
 #include <nvs.h>
+#include <ESPmDNS.h>
 
 #define USE_MCP
 
@@ -49,7 +50,7 @@ typedef struct
   float tolerance;
 } config_data_t;
 
-config_data_t configData={"192.168.1.2",255,3250,1632.0,10,0.50,1.50,"","","PumpController","",13,8,0.02};
+config_data_t configData={"192.168.1.2",255,3250,1632.0,10,0.30,0.60,"","","PumpController","",13,8,0.02};
 
 char rootIndex[10240];
 char httpMsg[4096];

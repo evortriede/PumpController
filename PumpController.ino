@@ -450,6 +450,10 @@ void setup()
   adcAttachPin(CL17_PIN);
   eepromSetup();
   wifiAPSetup();
+  
+  MDNS.begin(configData.captive_ssid);
+  MDNS.addService("http", "tcp", 80);
+
   initWebSocket();
   webServerSetup();
   telnetSetup();
