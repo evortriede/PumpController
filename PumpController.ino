@@ -140,7 +140,7 @@ void handleSetConfig(AsyncWebServerRequest *request)
   configData.sweetSpotHigh=atof(request->arg("sweethi").c_str());
   configData.autoStartSetting=atoi(request->arg("autostart").c_str());
   configData.tolerance=atof(request->arg("tolerance").c_str());
-  configData.autoStartSetting=atoi(request->arg("adjustfreq").c_str());
+  configData.adjustFrequency=atoi(request->arg("adjustfreq").c_str());
   strcpy(configData.ssid,request->arg("ssid").c_str());
   strcpy(configData.pass,request->arg("pass").c_str());
   strcpy(configData.captive_ssid, request->arg("captive_ssid").c_str());
