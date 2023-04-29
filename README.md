@@ -87,11 +87,11 @@ It is best to calibrate Conversion Factor during a WTP run when the CL17 reading
 
 While it is unlikely that LWC will ever have to build another copy of the Pump Controller, maybe another small water system with a CL17 may want to replace their existing chlorine pump with a Kamoer DIPump550 (or similar) and control the pump with this. So, here's what one would need to know.
 
-The /hardware directory contains a bill of materials. The enclosure that LWC used was a repurposed plastic box that a couple of Arduino microcontrollers had been shipped in. Use whatever is on hand or use a disposable food storage container. The enclosure is not important. The circuit is built on a strip board. The LWC version is 19x33 to fit in our enclosure but any dimensions that accommodate the components will work. VeeCAD was used to compose the strip board art. Both a jpg of the layout and the VeeCAD file  are in the /hardware directory along with the TinyCAD schematic should any modifications be desired.
+The /hardware directory contains a bill of materials. The enclosure that LWC used was a repurposed plastic box that a couple of Arduino microcontrollers had been shipped in. Use whatever is on hand or use a disposable food storage container. The enclosure is not important. The circuit is built on a strip board. The LWC version is 19x33 to fit in our enclosure but any dimensions that accommodate the components will work. VeeCAD was used to compose the strip board art. Both a jpg of the layout and the VeeCAD file are in the /hardware directory along with the TinyCAD schematic should any modifications be desired.
 
 ![VeeCad for Pump Controller](/hardware/PumpControllerBoardFront.jpg)
 
-If any of the foregoing is not perfectly obvious, seek assistance from an IoT geek.
+If the meaning of any of the foregoing is not perfectly obvious, please seek assistance from an IoT geek.
 
 ## Building the Firmware
 
