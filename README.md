@@ -6,7 +6,7 @@ London Water Co-op Pump Controller
 
 In the simplest of terms, the Pump Controller monitors the output of the Hach CL17 chlorine meter and adjusts the chlorine pump to keep the chlorine level within configured values. The CL17 speaks 4-20mA Current Loop and the pump speaks 0-5V. The Pump Controller uses an ESP32 development board, a current to voltage converter and a digital to analog converter (DAC) to perform this task.
 
-Update: We have a new pump, which is controlled by taking its control lines to ground. There are two control lines: on/off and pulse. On/off is self explanitory. Pulse controls the rate at which the pump operates. The pump can operate at up to 160 strokes per minute and it is configured so that each grounding of the pulse control line results in one stroke. The units in the UI are strokes per minute. The nominal rate when the WTP is running at 10 GPM is about 50 strokes per minute to achieve 0.7 PPM.
+Update: We have a new pump (LMI PD7xx), which is controlled by taking its control lines to ground. There are two control lines: on/off and pulse. On/off is self explanitory. Pulse controls the rate at which the pump operates. The pump can operate at up to 160 strokes per minute and it is configured so that each grounding of the pulse control line results in one stroke. The units in the UI are strokes per minute. The nominal rate when the WTP is running at 10 GPM is about 50 strokes per minute to achieve 0.7 PPM.
 
 The circuit board was designed with Tiny CAD and Vee CAD. The CAD files are in the /hardware directory.
 
