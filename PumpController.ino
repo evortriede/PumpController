@@ -74,9 +74,115 @@ void handleConfig(AsyncWebServerRequest *request)
          );
   request->send(200, "text/html", httpMsg);
 }
+#ifdef USE_PULSE
+/*
+long pulseTimer=0;
+
+void doPulse()
+{
+  if (pulseTimer)
+  {
+    if (pulseTimer<millis())
+    {
+      pulseTimer=0;
+      lastPulse=millis();
+      digitalWrite(PULSE_PIN,LOW);
+    }
+  }
+  else
+  {
+    pulseTimer=millis()+30; // 30msec per pulse
+    digitalWrite(PULSE_PIN,HIGH);
+  }
+}
+void pulse()
+{
+  if (pulseTimer) doPulse();
+  if (pumpSetting == 0) return;
+  if ((lastPulse+pulseInterval)>millis()) return;
+  doPulse();
+}
+*/
+
+bool fOn=false;
+
+static bool IRAM_ATTR timer_group_isr_callback(void *args)
+{
+  if (fOn)// need to turn it off and wait for pulseInterval
+  {
+    timer_group_set_alarm_value_in_isr(TIMER_GROUP_1, TIMER_1, pulseInterval);
+    digitalWrite(PULSE_PIN,LOW);
+    fOn=false;
+  }
+  else // need to turn it on and wait for PULSE_WIDTH
+  {
+    timer_group_set_alarm_value_in_isr(TIMER_GROUP_1, TIMER_1, PULSE_WIDTH);
+    digitalWrite(PULSE_PIN,HIGH);
+    fOn=true;
+  }
+  return false; // return whether we need to yield at the end of ISR
+}
+
+
+void timerInit()
+{
+  timer_init(TIMER_GROUP_1, TIMER_1, &timerConfig);
+  timer_set_counter_value(TIMER_GROUP_1, TIMER_1, 0);
+  timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, TIMER_BASE_CLK);
+  timer_enable_intr(TIMER_GROUP_1, TIMER_1);
+  timer_isr_callback_add(TIMER_GROUP_1, TIMER_1, timer_group_isr_callback, &fOn, 0);
+  Serial.printf("base=%lu scale=%lu pulse width=%lu\n",TIMER_BASE_CLK,TIMER_SCALE,PULSE_WIDTH);
+}
+#endif
+
 
 void setPump(int setting)
 {
+#ifdef USE_PULSE
+  if (setting != 0)
+  {
+    // for now, it will be pulses per minute
+    pulseInterval = (TIMER_SCALE*60) / setting;
+    Serial.printf("interval=%lu\n",pulseInterval);
+    if (pumpSetting==0) // we need to start the timer
+    {
+      timer_set_counter_value(TIMER_GROUP_1, TIMER_1, 0);
+      timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, PULSE_WIDTH);//~30ms
+      fOn=true;
+      digitalWrite(ONOFF_PIN,HIGH);// turn on pump
+      digitalWrite(PULSE_PIN,HIGH);// start a pulse
+      timer_start(TIMER_GROUP_1, TIMER_1);
+    }
+    else
+    {
+      timer_disable_intr(TIMER_GROUP_1, TIMER_1);
+      if (!fOn)//don't touch anything if a pulse is in  progress
+      {
+        uint64_t tval;
+        timer_get_counter_value(TIMER_GROUP_1, TIMER_1, &tval);
+        if (tval > pulseInterval)//counter is already past new interval so start a pulse
+        {
+          timer_set_counter_value(TIMER_GROUP_1, TIMER_1, 0);
+          timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, PULSE_WIDTH);
+          fOn=true;
+          digitalWrite(PULSE_PIN,HIGH);
+        }
+        else // counter is less than interval so just set the alarm to the new interval
+        {
+          timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, pulseInterval);
+        }
+      }
+      timer_enable_intr(TIMER_GROUP_1, TIMER_1);
+    }
+  }
+  else
+  {
+    timer_pause(TIMER_GROUP_1, TIMER_1);
+    digitalWrite(ONOFF_PIN,LOW);//turn pump off
+    digitalWrite(PULSE_PIN,LOW);// make sure pulse is off
+  }
+  
+#else
 #ifdef USE_MCP
   if (setting<0 || setting>4095) return;
   Serial.printf("setting pump to %i\n",setting);
@@ -100,11 +206,15 @@ void setPump(int setting)
     digitalWrite(PUMP_PIN,LOW);
   }
 #endif
+#endif
   pumpSetting=setting;
   if (telnetClient)
   {
     telnetClient.printf("P%i\r\n",pumpSetting);  
   }
+#ifdef USE_PULSE
+  //pulse();
+#endif
 }
 
 void handleSetPump(AsyncWebServerRequest *request)
@@ -437,6 +547,17 @@ void setup()
 {
   Serial.begin(115200);
   esp_log_set_vprintf(&myprintf);
+#ifdef USE_PULSE
+  pinMode(PULSE_PIN,OUTPUT);
+  digitalWrite(PULSE_PIN,LOW);
+  pinMode(ONOFF_PIN,OUTPUT);
+  digitalWrite(ONOFF_PIN,LOW);
+  delay(1000);
+  digitalWrite(ONOFF_PIN,HIGH);
+  delay(1000);
+  digitalWrite(ONOFF_PIN,LOW);
+  timerInit();
+#else
 #ifdef USE_MCP
   MCP.begin(21,22);
   setPump(0);
@@ -446,6 +567,7 @@ void setup()
   pinMode(PUMP_PIN,OUTPUT);
   digitalWrite(PUMP_PIN,LOW);
 //  dacWrite(PUMP_PIN,0);
+#endif
 #endif
   adcAttachPin(CL17_PIN);
   eepromSetup();
@@ -547,6 +669,7 @@ int tot=0;
 int rg[sampleSize];
 
 long timeToSend=0;
+long lastPrint=0;
 
 void loop() 
 {
@@ -600,7 +723,17 @@ void loop()
     autoTime=millis()+(60000*configData.adjustFrequency);
   }
 
-
+#ifdef USE_PULSE
+  if (pumpSetting && (lastPrint+333)<millis() && false)
+  {
+    uint64_t tval,aval;
+    timer_get_counter_value(TIMER_GROUP_1, TIMER_1, &tval);
+    timer_get_alarm_value(TIMER_GROUP_1, TIMER_1, &aval);
+    Serial.printf("%lu %lu\n",tval,aval);
+    lastPrint=millis();
+  }
+//  pulse();
+#else
 #ifndef USE_MCP
   if (pumpSetting)
   {
@@ -610,5 +743,6 @@ void loop()
   {
     digitalWrite(PUMP_PIN,LOW);
   }
+#endif
 #endif
 }

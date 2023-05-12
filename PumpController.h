@@ -8,9 +8,23 @@
 #include <esp_log.h>
 #include <nvs.h>
 #include <ESPmDNS.h>
+#include <driver\timer.h>
 
-#define USE_MCP
+//define USE_MCP
+#define USE_PULSE
 
+#ifdef USE_PULSE
+#define PULSE_PIN 23
+#define ONOFF_PIN 21
+#define TIMER_DIVIDER         (16)  //  Hardware timer clock divider
+#define TIMER_SCALE           (TIMER_BASE_CLK / TIMER_DIVIDER)  // convert counter value to seconds
+#define PULSE_WIDTH (TIMER_SCALE/33)
+
+timer_config_t timerConfig = {TIMER_ALARM_EN, TIMER_PAUSE, TIMER_INTR_LEVEL, TIMER_COUNT_UP, TIMER_AUTORELOAD_EN, TIMER_DIVIDER};
+
+long lastPulse=0;
+long pulseInterval=0;
+#else
 #ifdef USE_MCP
 #include "Wire.h"
 #include "MCP4725.h"
@@ -18,6 +32,7 @@
 MCP4725 MCP(0x62);  // 0x62 or 0x63
 #else
 #define PUMP_PIN 25
+#endif
 #endif
 
 #define CL17_PIN 34
