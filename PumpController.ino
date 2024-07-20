@@ -138,6 +138,10 @@ void timerInit()
 
 void setPump(int setting)
 {
+  if (setting>configData.pumpMax)
+  {
+    setting=configData.pumpMax;
+  }
 #ifdef USE_PULSE
   if (setting != 0)
   {
