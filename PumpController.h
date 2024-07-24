@@ -2,28 +2,28 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <AsyncWebSocket.h>
-#include <AsyncWebSynchronization.h>
 #include <ESPAsyncWebServer.h>
 #include <Update.h>
 #include <esp_log.h>
 #include <nvs.h>
 #include <ESPmDNS.h>
-#include <driver\timer.h>
 
 //define USE_MCP
 #define USE_PULSE
 
 #ifdef USE_PULSE
+#define LED_BUILTIN 2
 #define PULSE_PIN 23
 #define ONOFF_PIN 21
-#define TIMER_DIVIDER         (16)  //  Hardware timer clock divider
-#define TIMER_SCALE           (TIMER_BASE_CLK / TIMER_DIVIDER)  // convert counter value to seconds
-#define PULSE_WIDTH (TIMER_SCALE/33)
+#define TIMER_SCALE 1000000
 
-timer_config_t timerConfig = {TIMER_ALARM_EN, TIMER_PAUSE, TIMER_INTR_LEVEL, TIMER_COUNT_UP, TIMER_AUTORELOAD_EN, TIMER_DIVIDER};
+hw_timer_t *timer = NULL;
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 long lastPulse=0;
 long pulseInterval=0;
+long nextPulse=0;
+bool fOn=false;
 #else
 #ifdef USE_MCP
 #include "Wire.h"
