@@ -204,6 +204,24 @@ void handleSetPump(AsyncWebServerRequest *request)
   request->send(200, "text/html", 
     "<html><head></head><body onload=\"location.replace('/');\"></body></html>\n");
 }
+
+void handleStartPump(AsyncWebServerRequest *request)
+{
+  automatic=true;
+  setPump(configData.autoStartSetting);
+  request->send(200, "text/html", 
+    "<html><head></head><body onload=\"location.replace('/');\"></body></html>\n");
+}
+
+void handleStopPump(AsyncWebServerRequest *request)
+{
+  automatic=false;
+  setPump(0);
+  request->send(200, "text/html", 
+    "<html><head></head><body onload=\"location.replace('/');\"></body></html>\n");
+}
+
+
 /* for refrence
  * 
 typedef struct
@@ -287,6 +305,8 @@ void eepromSetup()
 void webServerSetup()
 {
   server.on("/",handleRoot);
+  server.on("/startPump",handleStartPump);
+  server.on("/stopPump",handleStopPump);
   server.on("/setPump",handleSetPump);
   server.on("/config",handleConfig);
   server.on("/setConfig",handleSetConfig);

@@ -51,7 +51,7 @@ static const char rootPage[] PROGMEM =R"(
     <meta http-equiv="Expires" content="0" />
     <script>
       let pumpChanged=false;
-      var gateway = `ws://${window.location.hostname}/ws`;
+      var gateway = `ws://${window.location.hostname}:${window.location.port}/ws`;
       var websocket;
       function initWebSocket() {
         console.log('Trying to open a WebSocket connection...');
